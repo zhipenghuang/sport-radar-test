@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="mts-sdk-2.3.3.0-tinyjar">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/src/main/resources/mts-sdk-2.3.3.0-tinyjar.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
