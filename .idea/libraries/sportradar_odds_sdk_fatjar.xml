@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sportradar-odds-sdk-fatjar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/main/resources/sportradar-odds-sdk-fatjar.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

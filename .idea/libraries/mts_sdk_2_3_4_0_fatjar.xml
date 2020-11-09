@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="mts-sdk-2.3.4.0-fatjar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/main/resources/mts-sdk-2.3.4.0-fatjar.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

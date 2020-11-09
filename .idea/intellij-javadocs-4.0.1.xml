@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaDocConfiguration">
+    <GENERAL>
+      <MODE>UPDATE</MODE>
+      <OVERRIDDEN_METHODS>false</OVERRIDDEN_METHODS>
+      <SPLITTED_CLASS_NAME>true</SPLITTED_CLASS_NAME>
+      <LEVELS>
+        <LEVEL>FIELD</LEVEL>
+        <LEVEL>TYPE</LEVEL>
+        <LEVEL>METHOD</LEVEL>
+      </LEVELS>
+      <VISIBILITIES>
+        <VISIBILITY>DEFAULT</VISIBILITY>
+        <VISIBILITY>PROTECTED</VISIBILITY>
+        <VISIBILITY>PUBLIC</VISIBILITY>
+      </VISIBILITIES>
+    </GENERAL>
+    <TEMPLATES>
+      <CLASSES>
+        <CLASS>
+          <KEY>.+</KEY>
+          <VALUE>/**\n
+* ${name?capitalize?replace(&quot; &quot;, &quot;&quot;)} \n
+* \n
+* @author yunmu \n
+* @version 1.0.0 \n
+* @since ${.now} \n
+*/</VALUE>
+        </CLASS>
+      </CLASSES>
+      <CONSTRUCTORS>
+        <CONSTRUCTOR>
+          <KEY>.+</KEY>
+          <VALUE>/**\n
+* ${name?capitalize?replace(&quot; &quot;, &quot;&quot;)} \n
+* \n
+* @author yunmu \n
+* @version 1.0.0 \n
+* @since ${.now} \n
+&lt;#list element.parameterList.parameters as parameter&gt;* @param ${parameter.name} \n
+&lt;/#list&gt;* @return ${name?capitalize?replace(&quot; &quot;, &quot;&quot;)} \n
+&lt;#list element.throwsList.referenceElements as exception&gt;* @throws ${exception.referenceName} \n
+&lt;/#list&gt; */</VALUE>
+        </CONSTRUCTOR>
+      </CONSTRUCTORS>
+      <METHODS>
+        <METHOD>
+          <KEY>.+</KEY>
+          <VALUE>/**\n
+* ${name?capitalize?replace(&quot; &quot;, &quot;&quot;)?uncap_first} \n
+* \n
+* @author yunmu \n
+* @version 1.0.0 \n
+* @since ${.now} \n
+&lt;#list element.parameterList.parameters as parameter&gt;* @param ${parameter.name} \n
+&lt;/#list&gt;&lt;#if isNotVoid&gt;* @return ${return?capitalize?replace(&quot; &quot;, &quot;&quot;)} \n
+&lt;/#if&gt;&lt;#list element.throwsList.referenceElements as exception&gt;* @throws ${exception.referenceName} \n
+&lt;/#list&gt; */</VALUE>
+        </METHOD>
+      </METHODS>
+      <FIELDS>
+        <FIELD>
+          <KEY>.+</KEY>
+          <VALUE>/** ${name?capitalize?replace(&quot; &quot;, &quot;&quot;)?uncap_first} */</VALUE>
+        </FIELD>
+      </FIELDS>
+    </TEMPLATES>
+  </component>
+</project>
