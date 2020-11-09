@@ -23,8 +23,7 @@ public class MatchDao {
 
     public SoccerMatch findMatches(String matchId) {
         // 体育项目类型
-        Criteria criteria =
-                Criteria.where("_id").is(matchId);
+        Criteria criteria = Criteria.where("_id").is(matchId);
 //        // 盘口状态(活跃)/亚盘口状态(活跃)/盘口选项状态(活跃)
 //        criteria.and("markets").elemMatch(
 //                Criteria.where("status").is(0).and("specifiers").elemMatch(
