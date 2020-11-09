@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @ToString
-@Document(collection = "soccer_match_ym")
+@Document(collection = "soccer_match")
 public class SoccerMatchDb {
 
     private String matchId;

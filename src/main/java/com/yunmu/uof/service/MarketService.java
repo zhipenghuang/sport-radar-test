@@ -20,6 +20,6 @@ public class MarketService {
 //        mongoTemplate.getConverter().write(soccerMatch, document);
 //        UpdateResult result = mongoTemplate.upsert(query, Update.fromDocument(new Document().append("$set", document)), "soccer_match_ym");
 //        System.out.println(result.getUpsertedId());
-        mongoTemplate.insert(soccerMatch,"soccer_match_ym");
+        mongoTemplate.insert(soccerMatch,"soccer_match");
     }
 }

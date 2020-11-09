@@ -1,6 +1,5 @@
 package com.yunmu.uof.test;
 
-import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.sportradar.unifiedodds.sdk.OddsFeed;
 import com.sportradar.unifiedodds.sdk.SportsInfoManager;
@@ -8,7 +7,6 @@ import com.sportradar.unifiedodds.sdk.cfg.OddsFeedConfiguration;
 import com.yunmu.uof.DemoApplication;
 import com.yunmu.uof.constant.SdkConstants;
 import com.yunmu.uof.entity.MatchResultConfig;
-import com.yunmu.uof.entity.NewSoccerMatch;
 import com.yunmu.uof.entity.market_xml.MarketDesc;
 import com.yunmu.uof.entity.match_status_xml.MatchStatus;
 import com.yunmu.uof.entity.match_status_xml.Sports;
@@ -16,7 +14,6 @@ import com.yunmu.uof.entity.time_line.TimeEventXml;
 import com.yunmu.uof.entity.time_line.TimeLineXml;
 import com.yunmu.uof.enums.MatchResultType;
 import com.yunmu.uof.listener.GlobalEventsListener;
-import com.yunmu.uof.repository.SoccerMatchRepository;
 import com.yunmu.uof.utils.FetchStaticDataManager;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -42,15 +39,12 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = DemoApplication.class)
 public class SoccerMatchTest {
 
-    @Autowired
-    private SoccerMatchRepository matchRepository;
     @Autowired
     private MongoTemplate mongoTemplate;
 
@@ -68,24 +62,6 @@ public class SoccerMatchTest {
         oddsFeed = new OddsFeed(new GlobalEventsListener(), configuration);
         SportsInfoManager sportsInfoManager = oddsFeed.getSportsInfoManager();
 
-    }
-
-    @Test
-    public void test2() {
-        FetchStaticDataManager client = new FetchStaticDataManager();
-        int start = 0;
-        Stopwatch stopwatch = Stopwatch.createStarted();
-        List<NewSoccerMatch> soccerMatches = new ArrayList<>();
-        while (true) {
-            List<NewSoccerMatch> page = client.getSchedulePage(start);
-            if (page.size() == 0) {
-                break;
-            }
-            soccerMatches.addAll(page);
-            start += 1000;
-        }
-        stopwatch.stop();
-        System.err.println("总耗费:" + stopwatch.elapsed(TimeUnit.SECONDS) + "秒");
     }
 
     @Test

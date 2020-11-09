@@ -1,6 +1,5 @@
 package com.yunmu.uof.utils;
 
-import com.yunmu.uof.entity.NewSoccerMatch;
 import com.yunmu.uof.entity.market_xml.MarketDesc;
 import com.yunmu.uof.entity.market_xml.MarketXml;
 import com.yunmu.uof.entity.match_status_xml.MatchStatus;
@@ -34,32 +33,6 @@ public class FetchStaticDataManager {
     @Value("${sportradar.accessToken:sARnisHjRXjNb48FKE}")
     private String accessToken = "sARnisHjRXjNb48FKE";
 
-
-    /**
-     * @throws
-     * @Title: getSchedulePage
-     * @Description: TODO(分页获取所有赛程)
-     * @param: @param language
-     * @param: @return
-     * @return: JSONObject
-     * @Author: wanglan
-     */
-    public List<NewSoccerMatch> getSchedulePage(int start) {
-        String url = SportDataType.SCHEDULE_PAGE.getApi().replace("ZERO", Integer.toString(start));
-        List<NewSoccerMatch> soccerMatches = new ArrayList<>();
-        try {
-            //获取结果集
-            String result = this.dataFetch(url);
-            //如果结果集不为空则封装
-            if (result != null) {
-
-            }
-            return soccerMatches;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return soccerMatches;
-    }
 
     /**
      * @throws
