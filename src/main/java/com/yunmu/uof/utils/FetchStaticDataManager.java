@@ -1,14 +1,16 @@
 package com.yunmu.uof.utils;
 
+import com.yunmu.uof.entity.TimeEvent;
+import com.yunmu.uof.entity.TimeLine;
 import com.yunmu.uof.entity.market_xml.MarketDesc;
 import com.yunmu.uof.entity.market_xml.MarketXml;
 import com.yunmu.uof.entity.match_status_xml.MatchStatus;
 import com.yunmu.uof.entity.match_status_xml.MatchStatusDesc;
 import com.yunmu.uof.entity.sport_xml.SportXml;
 import com.yunmu.uof.entity.sport_xml.SportsXml;
-import com.yunmu.uof.entity.time_line.TimeLineXml;
 import com.yunmu.uof.enums.SportDataType;
 import okhttp3.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -113,22 +115,24 @@ public class FetchStaticDataManager {
         return null;
     }
 
-    public TimeLineXml getTimeLine(String matchId) {
+    public List<TimeEvent> getTimeLine(String matchId) {
+        if (StringUtils.isBlank(matchId)) {
+            return null;
+        }
         String url = SportDataType.TIME_LINE.getApi().replace("MATCHID", matchId);
         try {
             // 获取结果集
             String result = this.dataFetch(url);
             // 如果结果集不为空则封装
             if (result != null) {
-                TimeLineXml timeLine =
-                        (TimeLineXml) XMLUtil.convertXmlStrToObject(TimeLineXml.class, result);
-                return timeLine;
+                TimeLine timeLine = (TimeLine) XMLUtil.convertXmlStrToObject(TimeLine.class, result);
+                return timeLine.getEvents();
             }
             return null;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     /**

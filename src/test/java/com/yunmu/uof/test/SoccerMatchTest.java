@@ -7,12 +7,10 @@ import com.sportradar.unifiedodds.sdk.cfg.OddsFeedConfiguration;
 import com.yunmu.uof.DemoApplication;
 import com.yunmu.uof.constant.SdkConstants;
 import com.yunmu.uof.entity.MatchResultConfig;
+import com.yunmu.uof.entity.TimeEvent;
 import com.yunmu.uof.entity.market_xml.MarketDesc;
 import com.yunmu.uof.entity.match_status_xml.MatchStatus;
 import com.yunmu.uof.entity.match_status_xml.Sports;
-import com.yunmu.uof.entity.time_line.TimeEventXml;
-import com.yunmu.uof.entity.time_line.TimeLineXml;
-import com.yunmu.uof.enums.MatchResultType;
 import com.yunmu.uof.listener.GlobalEventsListener;
 import com.yunmu.uof.utils.FetchStaticDataManager;
 import lombok.extern.slf4j.Slf4j;
@@ -145,19 +143,19 @@ public class SoccerMatchTest {
         List<String> spec = Lists.newArrayList("49", "50", "51", "52", "53", "54", "56", "57", "58", "59", "818", "819");
         MatchResultConfig cfg1 = new MatchResultConfig();
         cfg1.setSportId("sr:sport:1");
-        cfg1.setType(MatchResultType.FULL_TIME.getType());
+//        cfg1.setType(MatchResultType.FULL_TIME.getType());
         cfg1.setMarketIds(new ArrayList<>());
         MatchResultConfig cfg2 = new MatchResultConfig();
         cfg2.setSportId("sr:sport:1");
-        cfg2.setType(MatchResultType.FIRST_HALF.getType());
+//        cfg2.setType(MatchResultType.FIRST_HALF.getType());
         cfg2.setMarketIds(new ArrayList<>());
         MatchResultConfig cfg3 = new MatchResultConfig();
         cfg3.setSportId("sr:sport:1");
-        cfg3.setType(MatchResultType.SECOND_HALF.getType());
+//        cfg3.setType(MatchResultType.SECOND_HALF.getType());
         cfg3.setMarketIds(new ArrayList<>());
         MatchResultConfig cfg4 = new MatchResultConfig();
         cfg4.setSportId("sr:sport:1");
-        cfg4.setType(MatchResultType.TWO_HALF.getType());
+//        cfg4.setType(MatchResultType.TWO_HALF.getType());
         cfg4.setMarketIds(new ArrayList<>());
         for (Map.Entry<String, String> entry : markets.entrySet()) {
             if (entry.getValue().contains("1st_half")) {
@@ -211,14 +209,9 @@ public class SoccerMatchTest {
 
     @Test
     public void test9() {
-        FetchStaticDataManager client = new FetchStaticDataManager();
-        TimeLineXml timeLine = client.getTimeLine("sr:match:23893925");
-        for (TimeEventXml eventXml : timeLine.getEvents()) {
-            System.err.println(eventXml);
-        }
-        timeLine.setMatchId("sr:match:23893925");
-        System.err.println(timeLine.getSportEventStatus());
-        mongoTemplate.insert(timeLine, "match_time_line");
+        FetchStaticDataManager fetchStaticDataManager = new FetchStaticDataManager();
+        List<TimeEvent> timeEventsXml = fetchStaticDataManager.getTimeLine("sr:match:22762729");
+        timeEventsXml.forEach(System.err::println);
     }
 }
 
