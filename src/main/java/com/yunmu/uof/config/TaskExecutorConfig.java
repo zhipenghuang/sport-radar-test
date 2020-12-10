@@ -14,11 +14,12 @@ public class TaskExecutorConfig {
     @Bean
     public Executor executor1() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setThreadNamePrefix("test-pool1-");
-        executor.setMaxPoolSize(2);
-        executor.setCorePoolSize(2);
-        executor.setQueueCapacity(10);
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        executor.setThreadNamePrefix("executor1-");
+        executor.setCorePoolSize(1);
+        executor.setMaxPoolSize(1);
+        executor.setQueueCapacity(5);
+        executor.setKeepAliveSeconds(120);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
         return executor;
     }
 
@@ -26,11 +27,12 @@ public class TaskExecutorConfig {
     @Bean
     public Executor executor2() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setThreadNamePrefix("test-pool2-");
-        executor.setMaxPoolSize(2);
+        executor.setThreadNamePrefix("executor1-");
         executor.setCorePoolSize(2);
-        executor.setQueueCapacity(10);
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        executor.setMaxPoolSize(4);
+        executor.setQueueCapacity(5);
+        executor.setKeepAliveSeconds(120);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
         return executor;
     }
 }

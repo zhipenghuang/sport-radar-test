@@ -2,10 +2,11 @@ package com.yunmu.uof.service.impl;
 
 import com.yunmu.uof.dao.MatchDao;
 import com.yunmu.uof.entity.SoccerMatch;
+import com.yunmu.uof.service.AsyncTaskService;
 import com.yunmu.uof.service.MatchService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.core.task.TaskRejectedException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,8 @@ public class MatchServiceImpl implements MatchService {
 
     @Autowired
     private MatchDao matchDao;
+    @Autowired
+    private AsyncTaskService asyncTaskService;
 
     @Override
     public SoccerMatch findMatches(String matchId) {
@@ -21,16 +24,19 @@ public class MatchServiceImpl implements MatchService {
         return match;
     }
 
-    @Async("executor1")
     @Override
     public String test(String ss) {
+        for (int i = 0; i < 11; i++) {
+            try {
+                asyncTaskService.asyncTest(ss);
+            } catch (TaskRejectedException e) {
+                log.error("rejected task");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        try {
-            Thread.sleep(2000);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        log.info("service---------------------------");
-        return "ss";
+        return "hello";
     }
+
 }
