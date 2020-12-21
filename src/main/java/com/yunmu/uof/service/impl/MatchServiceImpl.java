@@ -47,7 +47,7 @@ public class MatchServiceImpl implements MatchService {
         log.info("------------" + stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
         for (Future future : futures) {
             try {
-                String string = (String) future.get();
+                String string = (String) future.get(500L,TimeUnit.SECONDS);
                 log.info(string);
             } catch (Exception e) {
                 e.printStackTrace();

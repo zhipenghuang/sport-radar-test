@@ -15,8 +15,8 @@ public class TaskExecutorConfig {
     public Executor executor1() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setThreadNamePrefix("executor1-");
-        executor.setCorePoolSize(1);
-        executor.setMaxPoolSize(1);
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(5);
         executor.setQueueCapacity(5);
         executor.setKeepAliveSeconds(120);
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
