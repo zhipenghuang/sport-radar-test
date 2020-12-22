@@ -12,9 +12,7 @@ import com.sportradar.unifiedodds.sdk.exceptions.InitException;
 import com.yunmu.uof.constant.SdkConstants;
 import com.yunmu.uof.listener.GlobalEventsListener;
 import com.yunmu.uof.listener.MessageListener;
-import com.yunmu.uof.service.MarketService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -25,8 +23,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class SingleSessionSetup {
     private final OddsFeed oddsFeed;
-    @Autowired
-    private MarketService msgService;
 
     public SingleSessionSetup(String token) {
         log.info("Running the OddsFeed SDK - single session");
@@ -49,7 +45,7 @@ public class SingleSessionSetup {
         log.info("Building a simple session which will receive all messages");
         oddsFeed.getSessionBuilder()
                 .setMessageInterest(MessageInterest.AllMessages)
-                .setListener(new MessageListener("SingleSessionSetup", msgService))
+                .setListener(new MessageListener("SingleSessionSetup"))
                 .build();
 
         log.info("Opening the feed instance");

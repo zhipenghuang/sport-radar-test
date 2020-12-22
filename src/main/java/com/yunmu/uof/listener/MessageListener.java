@@ -8,14 +8,7 @@ import com.sportradar.unifiedodds.sdk.OddsFeedListener;
 import com.sportradar.unifiedodds.sdk.OddsFeedSession;
 import com.sportradar.unifiedodds.sdk.entities.SportEvent;
 import com.sportradar.unifiedodds.sdk.oddsentities.*;
-import com.yunmu.uof.entity.markets.Market;
-import com.yunmu.uof.entity.markets.Outcome;
-import com.yunmu.uof.entity.markets.*;
-import com.yunmu.uof.service.MarketService;
 import lombok.extern.slf4j.Slf4j;
-
-import java.math.BigDecimal;
-import java.util.*;
 
 /**
  * A basic feed listener implementation which outputs the data to the provided log
@@ -23,11 +16,7 @@ import java.util.*;
 @Slf4j
 public class MessageListener implements OddsFeedListener {
 
-    private final MarketService msgService;
-
-
-    public MessageListener(String listener_version, MarketService msgService) {
-        this.msgService = msgService;
+    public MessageListener(String listener_version) {
     }
 
     /**
@@ -40,74 +29,6 @@ public class MessageListener implements OddsFeedListener {
     public void onOddsChange(OddsFeedSession sender, OddsChange<SportEvent> oddsChanges) {
         log.info("Received odds change for: " + oddsChanges.getEvent().getId().toString() + ",markets:" + oddsChanges.getMarkets().size());
         // Now loop through the odds for each market
-        SoccerMatch soccerMatch = new SoccerMatch();
-        soccerMatch.setMatchId(oddsChanges.getEvent().getId().toString());
-        List<Market> markets = new ArrayList<>();
-        for (MarketWithOdds marketOdds : oddsChanges.getMarkets()) {
-            // Now loop through the outcomes within this particular market
-            Market market = new Market();
-            market.setId(marketOdds.getId());
-            market.setName(marketOdds.getName(Locale.CHINESE));
-            market.setIsFavourite(marketOdds.isFavourite());
-            market.setStatus(marketOdds.getStatus().name());
-
-            for (String key : marketOdds.getSpecifiers().keySet()) {
-                market.setSpecifiers(key + "=" + marketOdds.getSpecifiers().get(key));
-            }
-            List<Outcome> outcomes = new ArrayList<>();
-            log.info("Received odds information for:'" + marketOdds.getName(Locale.CHINESE) + "'");
-            log.info("Market status is: " + marketOdds.getStatus());
-            for (OutcomeOdds outcomeOdds : marketOdds.getOutcomeOdds()) {
-//                String outcomeDesc = outcomeOdds.getName();
-                Outcome outcome = new Outcome();
-                outcome.setId(outcomeOdds.getId());
-                outcome.setIsActive(outcomeOdds.isActive());
-                outcome.setIsPlayerOutcome(outcomeOdds.isPlayerOutcome());
-                outcome.setOdds(BigDecimal.valueOf(outcomeOdds.getOdds()));
-                outcome.setName(outcomeOdds.getName());
-                outcome.setProbability(BigDecimal.valueOf(outcomeOdds.getProbability()));
-                outcomes.add(outcome);
-                log.info("Outcome " + outcomeOdds.getName() + "'s odds is " + outcomeOdds.getOdds() + " , "
-                        + outcomeOdds.getProbability());
-            }
-            market.setOutcomes(outcomes);
-            markets.add(market);
-        }
-        soccerMatch.setMarkets(markets);
-
-        SoccerMatchDb soccerMatchDb = new SoccerMatchDb();
-        soccerMatchDb.setMatchId(soccerMatch.getMatchId());
-
-        Map<Integer, MarketDb> map = new HashMap<>();
-        for (Market market : soccerMatch.getMarkets()) {
-            MarketDb marketDb = map.get(market.getId());
-            if (marketDb == null) {
-                marketDb = new MarketDb();
-                marketDb.setId(market.getId());
-                marketDb.setIsFavourite(market.getIsFavourite());
-                marketDb.setName(market.getName());
-                marketDb.setStatus(market.getStatus());
-            }
-            List<Specifier> specifiers = marketDb.getSpecifiers();
-            if (specifiers == null) {
-                specifiers = new ArrayList<>();
-            }
-            Specifier specifier = new Specifier();
-            specifier.setName(market.getSpecifiers());
-            specifier.setOutcomes(market.getOutcomes());
-            specifiers.add(specifier);
-
-            marketDb.setSpecifiers(specifiers);
-
-            map.put(marketDb.getId(), marketDb);
-        }
-
-        List<MarketDb> marketDbs = new ArrayList<>();
-        for (Integer marketId : map.keySet()) {
-            marketDbs.add(map.get(marketId));
-        }
-        soccerMatchDb.setMarkets(marketDbs);
-        msgService.handleMarkets(soccerMatchDb);
     }
 
     /**
