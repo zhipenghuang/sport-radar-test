@@ -115,7 +115,7 @@ public class OkHttpUtils {
      * @param url
      * @return
      */
-    public Response getData(String url, Map<String, String> headMap) {
+    public Response getData(String url, Map<String, String> headMap) throws IOException {
         //1 构造Request
         Request.Builder builder = new Request.Builder();
         if (null != headMap) {
@@ -128,13 +128,7 @@ public class OkHttpUtils {
         //2 将Request封装为Call
         Call call = mOkHttpClient.newCall(request);
         //3 执行Call，得到response
-        Response response = null;
-        try {
-            response = call.execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return response;
+        return call.execute();
     }
 
     /**

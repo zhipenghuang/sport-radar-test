@@ -7,4 +7,6 @@ public interface MatchService {
     SoccerMatch findMatches(String matchId);
 
     String test(String ss);
+
+    String fetchTimeLine(String matchId) throws InterruptedException;
 }

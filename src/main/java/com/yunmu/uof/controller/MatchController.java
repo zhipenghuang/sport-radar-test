@@ -28,4 +28,10 @@ public class MatchController {
         log.info("ctr--------------");
         return "hello";
     }
+
+    @PostMapping(path = "/getTimeLine")
+    public String getTimeLine(@RequestParam(name = "matchId") String matchId) throws InterruptedException {
+        matchService.fetchTimeLine(matchId);
+        return "success";
+    }
 }

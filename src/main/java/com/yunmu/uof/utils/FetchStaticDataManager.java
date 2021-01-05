@@ -9,12 +9,18 @@ import com.yunmu.uof.entity.match_status_xml.MatchStatusDesc;
 import com.yunmu.uof.entity.sport_xml.SportXml;
 import com.yunmu.uof.entity.sport_xml.SportsXml;
 import com.yunmu.uof.enums.SportDataType;
+import com.yunmu.uof.utils.httpclient.HttpclientUtil;
+import com.yunmu.uof.utils.temp.HttpRequestUtil;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +32,8 @@ import java.util.stream.Collectors;
  * @Description:TODO(sport 静态数据 api客户端)
  * @author: wanglan
  */
-@Configuration
+@Component
+@Slf4j
 public class FetchStaticDataManager {
 
     /**
@@ -124,15 +131,36 @@ public class FetchStaticDataManager {
             // 获取结果集
             String result = this.dataFetch(url);
             // 如果结果集不为空则封装
-            if (result != null) {
+            if (StringUtils.isNotBlank(result)) {
                 TimeLine timeLine = (TimeLine) XMLUtil.convertXmlStrToObject(TimeLine.class, result);
+                log.info("拉取timeLine成功，比赛id:--{}--", matchId);
                 return timeLine.getEvents();
             }
-            return null;
+            log.error("拉取timeLine为null，比赛id:--{}--", matchId);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("拉取timeLine报错,比赛id:--" + matchId + "--,exception:", e);
+        }
+        return null;
+    }
+
+    public String test(String matchId) {
+        if (StringUtils.isBlank(matchId)) {
             return null;
         }
+        String url = "https://www.baidu.com";
+        try {
+            // 获取结果集
+            String result = this.dataFetch(url);
+            // 如果结果集不为空则封装
+            if (StringUtils.isNotBlank(result)) {
+                log.info("拉取timeLine成功，比赛id:--{}--", matchId);
+                return result;
+            }
+            log.error("拉取timeLine为null，比赛id:--{}--", matchId);
+        } catch (Exception e) {
+            log.error("拉取timeLine报错,比赛id:--" + matchId + "--,exception:", e);
+        }
+        return null;
     }
 
     /**
@@ -147,19 +175,19 @@ public class FetchStaticDataManager {
      * @date: 2020年7月17日 上午10:46:25
      */
     private String dataFetch(String url) throws IOException {
-
-        OkHttpUtils instance = OkHttpUtils.getInstance();
-
-        Map<String, String> headMap = new HashMap<>();
-        headMap.put("x-access-token", accessToken);
-
-        Response resp = instance.getData(url, headMap);
-
-        if (resp.code() == OkHttpUtils.CODE_SUCCESS) {
+//        OkHttpUtils instance = OkHttpUtils.getInstance();
+        Map<String, String> header = new HashMap<>();
+        header.put("x-access-token", accessToken);
+        Response resp = HttpRequestUtil.INSTANCE.get(url, header, null);
+        if (resp != null && resp.code() == 200 && resp.body() != null) {
             //1.响应结果集
-            String str = resp.body().string();
-            return str;
+            return resp.body().string();
         }
         return null;
+    }
+
+    private String dataFetch2(String url) throws IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+        String s = HttpclientUtil.get(url, accessToken);
+        return s;
     }
 }

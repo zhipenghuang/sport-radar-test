@@ -1,11 +1,13 @@
 package com.yunmu.uof.test;
 
+import cn.hutool.json.JSONUtil;
 import com.yunmu.uof.DemoApplication;
 import com.yunmu.uof.dao.MatchDao;
-import com.yunmu.uof.entity.MarketDTO;
-import com.yunmu.uof.entity.MatchResultConfig;
-import com.yunmu.uof.entity.SoccerMatch;
-import com.yunmu.uof.entity.SpecifierDTO;
+import com.yunmu.uof.entity.*;
+import com.yunmu.uof.utils.ProtostuffUtil;
+import io.protostuff.LinkedBuffer;
+import io.protostuff.ProtostuffIOUtil;
+import io.protostuff.runtime.RuntimeSchema;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -17,6 +19,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.CollectionUtils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -89,6 +94,49 @@ public class Other {
             }
         }
         System.err.println(soccerMatch);
+    }
+
+    private static RuntimeSchema<User> schema = RuntimeSchema.createFrom(User.class);
+
+    @Test
+    public void test6() throws IOException {
+        User user1 = new User();
+        user1.setEmail("10000@qq.com");
+        user1.setFirstName("zhang");
+        user1.setLastName("sanfeng");
+        List<User> users = new ArrayList<>();
+        users.add(new User("20000@qq.com"));
+        user1.setFriends(users);
+        Car car1 = new Car("宾利");
+        Car car2 = new Car("法拉利");
+        List<Car> cars = new ArrayList<>();
+        cars.add(car1);
+        cars.add(car2);
+        user1.setCars(cars);
+        byte[] bytes = ProtostuffIOUtil.toByteArray(user1, schema,
+                LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE));
+        System.err.println("-----------proto length : " + bytes.length);
+        User user2 = schema.newMessage();
+        ProtostuffIOUtil.mergeFrom(bytes, user2, schema);
+        System.err.println(user2);
+
+        String s = JSONUtil.toJsonStr(user1);
+        System.err.println("-----------json length : " + s.getBytes().length);
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(bos);
+        os.writeObject(user1);
+        os.flush();
+        os.close();
+        byte[] bytes1 = bos.toByteArray();
+        System.err.println("-----------java ser length : " + bytes1.length);
+        bos.close();
+
+        //使用自定义的工具类
+        byte[] bytes2 = ProtostuffUtil.serializer(user1);
+        System.err.println("-----------自定义proto length : " + bytes2.length);
+        User newUser = ProtostuffUtil.deserializer(bytes2, User.class);
+        System.err.println(newUser);
     }
 
     private Map<String, Integer> parseQuarterViaSpecifier(String specifier) {

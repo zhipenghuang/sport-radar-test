@@ -12,6 +12,7 @@ import com.yunmu.uof.entity.market_xml.MarketDesc;
 import com.yunmu.uof.entity.match_status_xml.MatchStatus;
 import com.yunmu.uof.entity.match_status_xml.Sports;
 import com.yunmu.uof.listener.GlobalEventsListener;
+import com.yunmu.uof.utils.CustomThreadFactory;
 import com.yunmu.uof.utils.FetchStaticDataManager;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -37,6 +38,10 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -45,6 +50,8 @@ public class SoccerMatchTest {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+    @Autowired
+    private FetchStaticDataManager fetchStaticDataManager;
 
     @Test
     public void test() {
@@ -207,11 +214,24 @@ public class SoccerMatchTest {
         bulkOps.execute();
     }
 
+    private static final int threads = 100;
+
     @Test
-    public void test9() {
-        FetchStaticDataManager fetchStaticDataManager = new FetchStaticDataManager();
-        List<TimeEvent> timeEventsXml = fetchStaticDataManager.getTimeLine("sr:match:22762729");
-        timeEventsXml.forEach(System.err::println);
+    public void test9() throws InterruptedException {
+        CountDownLatch countDownLatch = new CountDownLatch(threads);
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(threads, threads, 10, TimeUnit.SECONDS, new LinkedBlockingQueue<>(threads),
+                new CustomThreadFactory("云木pool"), new ThreadPoolExecutor.AbortPolicy());
+        executor.prestartAllCoreThreads();
+        for (int i = 0; i < threads; i++) {
+            executor.submit(() -> {
+                List<TimeEvent> timeEventsXml = fetchStaticDataManager.getTimeLine("sr:match:25112718");
+                log.info(timeEventsXml == null ? null : timeEventsXml.toString());
+                countDownLatch.countDown();
+            });
+        }
+        //等待计算线程执行完
+        countDownLatch.await();
+        executor.shutdown();
     }
 }
 
