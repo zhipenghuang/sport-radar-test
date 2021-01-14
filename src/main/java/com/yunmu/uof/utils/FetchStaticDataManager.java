@@ -143,14 +143,14 @@ public class FetchStaticDataManager {
         return null;
     }
 
-    public String test(String matchId) {
+    public String fetchBaidu(String matchId) {
         if (StringUtils.isBlank(matchId)) {
             return null;
         }
         String url = "https://www.baidu.com";
         try {
             // 获取结果集
-            String result = this.dataFetch(url);
+            String result = this.dataFetch2(url);
             // 如果结果集不为空则封装
             if (StringUtils.isNotBlank(result)) {
                 log.info("拉取timeLine成功，比赛id:--{}--", matchId);

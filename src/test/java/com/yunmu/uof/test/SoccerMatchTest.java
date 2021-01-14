@@ -7,7 +7,6 @@ import com.sportradar.unifiedodds.sdk.cfg.OddsFeedConfiguration;
 import com.yunmu.uof.DemoApplication;
 import com.yunmu.uof.constant.SdkConstants;
 import com.yunmu.uof.entity.MatchResultConfig;
-import com.yunmu.uof.entity.TimeEvent;
 import com.yunmu.uof.entity.market_xml.MarketDesc;
 import com.yunmu.uof.entity.match_status_xml.MatchStatus;
 import com.yunmu.uof.entity.match_status_xml.Sports;
@@ -214,7 +213,7 @@ public class SoccerMatchTest {
         bulkOps.execute();
     }
 
-    private static final int threads = 100;
+    private static final int threads = 10;
 
     @Test
     public void test9() throws InterruptedException {
@@ -224,7 +223,7 @@ public class SoccerMatchTest {
         executor.prestartAllCoreThreads();
         for (int i = 0; i < threads; i++) {
             executor.submit(() -> {
-                List<TimeEvent> timeEventsXml = fetchStaticDataManager.getTimeLine("sr:match:25112718");
+                String timeEventsXml = fetchStaticDataManager.fetchBaidu("sr:match:25112718");
                 log.info(timeEventsXml == null ? null : timeEventsXml.toString());
                 countDownLatch.countDown();
             });

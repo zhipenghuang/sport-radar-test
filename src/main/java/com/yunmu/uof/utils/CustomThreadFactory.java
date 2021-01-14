@@ -1,39 +1,36 @@
 package com.yunmu.uof.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CustomThreadFactory implements ThreadFactory {
 
-    private final AtomicInteger poolNumber = new AtomicInteger(1);
-
     private final ThreadGroup threadGroup;
 
     private final AtomicInteger threadNumber = new AtomicInteger(1);
 
-    public final String namePrefix;
+    public final String threadNamePrefix;
 
-    public CustomThreadFactory(String name) {
-        SecurityManager s = System.getSecurityManager();
-        threadGroup = (s != null) ? s.getThreadGroup() :
-                Thread.currentThread().getThreadGroup();
-        if (null == name || "".equals(name.trim())) {
-            name = "pool";
+    public CustomThreadFactory(String poolName) {
+        SecurityManager securityManager = System.getSecurityManager();
+        threadGroup = (securityManager != null) ? securityManager.getThreadGroup() : Thread.currentThread().getThreadGroup();
+        if (StringUtils.isBlank(poolName)) {
+            poolName = "pool";
         }
-        namePrefix = name + "-" +
-                poolNumber.getAndIncrement() +
-                "-thread-";
+        this.threadNamePrefix = poolName + "-thread-";
     }
 
     @Override
     public Thread newThread(Runnable r) {
-        Thread t = new Thread(threadGroup, r,
-                namePrefix + threadNumber.getAndIncrement(),
-                0);
-        if (t.isDaemon())
+        Thread t = new Thread(threadGroup, r, threadNamePrefix + threadNumber.getAndIncrement(), 0);
+        if (t.isDaemon()) {
             t.setDaemon(false);
-        if (t.getPriority() != Thread.NORM_PRIORITY)
+        }
+        if (t.getPriority() != Thread.NORM_PRIORITY) {
             t.setPriority(Thread.NORM_PRIORITY);
+        }
         return t;
     }
 }
