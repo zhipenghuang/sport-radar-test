@@ -19,6 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
     </properties>
 
     <dependencies>
@@ -164,7 +165,7 @@
     </dependencies>
 
     <build>
-        <finalName>yunmu-test</finalName>
+        <finalName>yunmu-test-${current.time}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -172,6 +173,27 @@
                 <configuration>
                     <fork>true</fork>
                     <includeSystemScope>true</includeSystemScope>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>timestamp-property</id>
+                        <goals>
+                            <goal>timestamp-property</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <name>current.time</name>
+                    <pattern>MMddHHmmss</pattern>
+                    <timeZone>GMT+8</timeZone>
+                    <fileSet/>
+                    <regex/>
+                    <source/>
+                    <value/>
                 </configuration>
             </plugin>
         </plugins>
