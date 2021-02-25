@@ -44,6 +44,7 @@ public class Other {
     @Test
     public void test2() {
         List<MatchResultConfig> all = mongoTemplate.findAll(MatchResultConfig.class);
+
         List<MatchResultConfig> collect = all.stream().sorted(
                 Comparator.comparing(MatchResultConfig::getSportId, Comparator.comparing(x -> Integer.valueOf(x.split(":")[2])))
                         .thenComparing(MatchResultConfig::getId, Comparator.comparing(x -> Integer.valueOf(x.split("_")[1]))))
